@@ -12,19 +12,20 @@ var (
 	Token     string
 	BotPrefix string
 
-	config *configStruct
+	config configStruct
 )
 
 type configStruct struct {
-	Token     string `json:"token"`
-	BotPrefix string `json:"prefix"`
+	Token     string `json:"Token"`
+	BotPrefix string `json:"BotPrefix"`
 }
 
 func ReadConfig() error {
+
 	file, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		fmt.Println(err.Error())
-		panic(err)
+		return err
 	}
 
 	err = json.Unmarshal(file, &config)
@@ -75,7 +76,7 @@ func Start() {
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Printf("Bot is running")
+	fmt.Printf("Bot is running\n")
 }
 
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -83,9 +84,9 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if m.Content == BotPrefix+"ping" {
+	fmt.Printf("m.Content: %s\n", m.Content)
+	if m.Content == "!ping" {
 		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
-		//s.ChannelMessageSend(m.ChannelID, "pong")
 	}
 }
 
